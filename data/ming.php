@@ -1,0 +1,32 @@
+<?php
+return array(
+    'functions' => array(
+        'ming_keypress',
+        'ming_setcubicthreshold',
+        'ming_setscale',
+        'ming_setswfcompression',
+        'ming_useconstants',
+        'ming_useswfversion',
+    ),
+    'classes' => array(
+        'SWFAction',
+        'SWFBitmap',
+        'SWFButton',
+        'SWFDisplayItem',
+        'SWFFill',
+        'SWFFont',
+        'SWFFontChar',
+        'SWFGradient',
+        'SWFMorph',
+        'SWFMovie',
+        'SWFPrebuiltClip',
+        'SWFShape',
+        'SWFSound',
+        'SWFSoundInstance',
+        'SWFSprite',
+        'SWFText',
+        'SWFTextField',
+        'SWFVideoStream',
+    ),
+    'description' => 'Ming (flash)',
+);

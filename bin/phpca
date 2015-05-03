@@ -1,0 +1,35 @@
+#!/usr/bin/php
+<?php
+// ? create-project installation : require installation
+$vendor_dir = is_dir(dirname(dirname((__FILE__))).'/vendor') ? dirname(dirname((__FILE__))).'/vendor' : dirname(dirname(dirname(dirname(__FILE__))));
+require $vendor_dir.'/autoload.php';
+
+use wapmorgan\PhpCodeAnalyzer\PhpCodeAnalyzer;
+
+$doc = <<<DOC
+Usage: phpca [-v] [FILES ...]
+
+Options:
+  -v --verbose  Prints more info
+
+DOC;
+
+$args = Docopt::handle($doc);
+
+if (isset($args['-v']))
+    $_ENV['verbose'] = true;
+else
+    $_ENV['verbose'] = false;
+
+$analyzer = new PhpCodeAnalyzer();
+$analyzer->loadData();
+
+foreach ($args['FILES'] as $file) {
+    if (is_dir($file)) {
+        $analyzer->analyzeDir($file);
+    } else {
+        $analyzer->analyzeFile($file);
+    }
+}
+echo PHP_EOL;
+$analyzer->printUsedExtensions();

@@ -1,0 +1,28 @@
+<?php
+return array(
+    'functions' => array(
+        'wincache_fcache_fileinfo',
+        'wincache_fcache_meminfo',
+        'wincache_lock',
+        'wincache_ocache_fileinfo',
+        'wincache_ocache_meminfo',
+        'wincache_refresh_if_changed',
+        'wincache_rplist_fileinfo',
+        'wincache_rplist_meminfo',
+        'wincache_scache_info',
+        'wincache_scache_meminfo',
+        'wincache_ucache_add',
+        'wincache_ucache_cas',
+        'wincache_ucache_clear',
+        'wincache_ucache_dec',
+        'wincache_ucache_delete',
+        'wincache_ucache_exists',
+        'wincache_ucache_get',
+        'wincache_ucache_inc',
+        'wincache_ucache_info',
+        'wincache_ucache_meminfo',
+        'wincache_ucache_set',
+        'wincache_unlock',
+    ),
+    'description' => 'Windows Cache for PHP',
+);

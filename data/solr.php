@@ -1,0 +1,35 @@
+<?php
+return array(
+    'functions' => array(
+        'solr_get_version',
+    ),
+    'classes' => array(
+        'SolrUtils',
+        'SolrInputDocument',
+        'SolrDocument',
+        'SolrDocumentField',
+        'SolrObject',
+        'SolrClient',
+        'SolrResponse',
+        'SolrQueryResponse',
+        'SolrUpdateResponse',
+        'SolrPingResponse',
+        'SolrGenericResponse',
+        'SolrParams',
+        'SolrModifiableParams',
+        'SolrQuery',
+        'SolrDisMaxQuery',
+        'SolrException',
+        'SolrClientException',
+        'SolrServerException',
+        'SolrIllegalArgumentException',
+        'SolrIllegalOperationException',
+    ),
+    'constants' => array(
+        'SOLR_MAJOR_VERSION',
+        'SOLR_MINOR_VERSION',
+        'SOLR_PATCH_VERSION',
+        'SOLR_EXTENSION_VERSION',
+    ),
+    'description' => 'Apache Solr',
+);

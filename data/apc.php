@@ -1,0 +1,51 @@
+<?php
+return array(
+    'functions' => array(
+        'apc_add',
+        'apc_bin_dump',
+        'apc_bin_dumpfile',
+        'apc_bin_load',
+        'apc_bin_loadfile',
+        'apc_cache_info',
+        'apc_cas',
+        'apc_clear_cache',
+        'apc_compile_file',
+        'apc_dec',
+        'apc_define_constants',
+        'apc_delete_file',
+        'apc_delete',
+        'apc_exists',
+        'apc_fetch',
+        'apc_inc',
+        'apc_load_constants',
+        'apc_sma_info',
+        'apc_store'
+    ),
+    'classes' => array(
+        'APCIterator'
+    ),
+    'constants' => array(
+        'APC_BIN_VERIFY_CRC32',
+        'APC_BIN_VERIFY_MD5',
+        'APC_ITER_ALL',
+        'APC_ITER_ATIME',
+        'APC_ITER_CTIME',
+        'APC_ITER_DEVICE',
+        'APC_ITER_DTIME',
+        'APC_ITER_FILENAME',
+        'APC_ITER_INODE',
+        'APC_ITER_KEY',
+        'APC_ITER_MD5',
+        'APC_ITER_MEM_SIZE',
+        'APC_ITER_MTIME',
+        'APC_ITER_NONE',
+        'APC_ITER_NUM_HITS',
+        'APC_ITER_REFCOUNT',
+        'APC_ITER_TTL',
+        'APC_ITER_TYPE',
+        'APC_ITER_VALUE',
+        'APC_LIST_ACTIVE',
+        'APC_LIST_DELETED'
+    ),
+    'description' => 'Alternative PHP Cache',
+);
