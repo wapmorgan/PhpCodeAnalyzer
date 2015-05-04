@@ -102,7 +102,7 @@ class PhpCodeAnalyzer {
         while (in_array_column($tokens, T_START_HEREDOC, 0)) {
             $start = array_search_column($tokens, T_START_HEREDOC, 0);
             $end = array_search_column($tokens, T_END_HEREDOC, 0);
-            array_splice($tokens, $start, ($end - $start));
+            array_splice($tokens, $start, ($end - $start + 1));
         }
 
         // find for used class names
@@ -112,6 +112,8 @@ class PhpCodeAnalyzer {
             if (is_array($tokens[$i]) && $tokens[$i][0] == T_USE) {
                 $i++;
                 if (is_array($tokens[$i]) && $tokens[$i][0] == T_WHITESPACE)
+                    $i++;
+                if ($tokens[$i] == '\\')
                     $i++;
                 $class_name = $this->catchAsStringUntilSemicolon($tokens, $i);
                 if (isset($this->classesSet[$class_name])) {
@@ -126,6 +128,8 @@ class PhpCodeAnalyzer {
                 $i++;
                 if (is_array($tokens[$i]) && $tokens[$i][0] == T_WHITESPACE)
                     $i++;
+                if ($tokens[$i] == '\\')
+                    $i++;
                 $class_name = $this->catchAsStringUntilOpenBrace($tokens, $i);
                 if (isset($this->classesSet[$class_name])) {
                     $ext = $this->classesSet[$class_name];
@@ -139,12 +143,30 @@ class PhpCodeAnalyzer {
                 $i++;
                 if (is_array($tokens[$i]) && $tokens[$i][0] == T_WHITESPACE)
                     $i++;
+                if ($tokens[$i] == '\\')
+                    $i++;
                 $class_name = $this->catchAsStringUntilOpenCurlyBrace($tokens, $i);
                 if (isset($this->classesSet[$class_name])) {
                     $ext = $this->classesSet[$class_name];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
                     fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                }
+            }
+            // find other usages
+            else if (is_array($tokens[$i]) && $tokens[$i][0] == T_STRING) {
+                if (isset($this->functionsSet[$tokens[$i][1]])) {
+                    $function_name = $tokens[$i][1];
+                    $ext = $this->functionsSet[$tokens[$i][1]];
+                    if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
+                    else $this->usedExtensions[$ext] = 1;
+                    fwrite(STDOUT, '['.$ext.'] Function "'.$function_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                } else if (isset($this->constantsSet[$tokens[$i][1]])) {
+                    $constant_name = $tokens[$i][1];
+                    $ext = $this->constantsSet[$tokens[$i][1]];
+                    if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
+                    else $this->usedExtensions[$ext] = 1;
+                    fwrite(STDOUT, '['.$ext.'] Constant "'.$constant_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
                 }
             }
         }
@@ -235,7 +257,9 @@ class PhpCodeAnalyzer {
             }
 
             if (isset($extension_data['windows']) && !$extension_data['windows']) {
-                echo ' Windows is not supported.';
+                echo ' Windows is not supported by this extension.';
+            } else if (isset($extension_data['windows_only']) && $extension_data['windows_only']) {
+                echo ' Only windows is supported by this extension.';
             }
 
             echo PHP_EOL;
