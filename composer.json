@@ -2,6 +2,7 @@
     "name": "wapmorgan/php-code-analyzer",
     "description": "A program that finds usage of different non-built-in extensions in your php code.",
     "type": "package",
+    "license": "BSD-3-Clause",
     "tags": ["command-line utility", "code analysis"],
     "autoload": {
         "psr-4": {
