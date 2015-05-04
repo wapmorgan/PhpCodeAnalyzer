@@ -1,7 +1,8 @@
 {
-    "name": "wapmorgan/php-code-requirements-analyzer",
+    "name": "wapmorgan/php-code-analyzer",
     "description": "A program that finds usage of different non-built-in extensions in your php code.",
     "type": "package",
+    "tags": ["command-line utility", "code analysis"],
     "autoload": {
         "psr-4": {
             "wapmorgan\\PhpCodeAnalyzer\\": "src/"
@@ -9,5 +10,6 @@
     },
     "require": {
         "docopt/docopt": "1.0.0-rc1"
-    }
+    },
+    "bin": ["bin/phpca"]
 }
