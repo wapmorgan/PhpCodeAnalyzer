@@ -78,6 +78,35 @@ class PhpCodeAnalyzer {
         }
     }
 
+    public function loadOneExtensionData($ext) {
+        if (file_exists($extension_file = dirname(dirname(__FILE__)).'/data/'.$ext.'.php')) {
+            $ext = basename($extension_file, '.php');
+            $extension_data = include $extension_file;
+            if (isset($extension_data['functions'])) {
+                foreach ($extension_data['functions'] as $extension_function) {
+                    $this->functionsSet[$extension_function] = $ext;
+                }
+                unset($extension_data['functions']);
+            }
+
+            if (isset($extension_data['classes'])) {
+                foreach ($extension_data['classes'] as $extension_class) {
+                    $this->classesSet[$extension_class] = $ext;
+                }
+                unset($extension_data['classes']);
+            }
+
+            if (isset($extension_data['constants'])) {
+                foreach ($extension_data['constants'] as $extension_constant) {
+                    $this->constantsSet[$extension_constant] = $ext;
+                }
+                unset($extension_data['constants']);
+            }
+
+            $this->extensions[$ext] = $extension_data;
+        }
+    }
+
     public function analyzeDir($dir) {
         echo 'Scanning '.$dir.' ...'.PHP_EOL;
         $this->analyzeDirInternal($dir);
@@ -94,7 +123,8 @@ class PhpCodeAnalyzer {
     }
 
     public function analyzeFile($file) {
-        echo 'Analyzing file '.$file.PHP_EOL;
+        if (isset($_ENV['verbose']) && $_ENV['verbose'])
+            echo 'Analyzing file '.$file.PHP_EOL;
         $source = file_get_contents($file);
         $tokens = token_get_all($source);
 
@@ -120,7 +150,8 @@ class PhpCodeAnalyzer {
                     $ext = $this->classesSet[$class_name];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
-                    fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                    if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
+                        fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
                 }
             }
             // new statement
@@ -135,7 +166,8 @@ class PhpCodeAnalyzer {
                     $ext = $this->classesSet[$class_name];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
-                    fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                    if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
+                        fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
                 }
             }
             // extends statement
@@ -150,7 +182,8 @@ class PhpCodeAnalyzer {
                     $ext = $this->classesSet[$class_name];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
-                    fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                    if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
+                        fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
                 }
             }
             // find other usages
@@ -160,13 +193,15 @@ class PhpCodeAnalyzer {
                     $ext = $this->functionsSet[$tokens[$i][1]];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
-                    fwrite(STDOUT, '['.$ext.'] Function "'.$function_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                    if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
+                        fwrite(STDOUT, '['.$ext.'] Function "'.$function_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
                 } else if (isset($this->constantsSet[$tokens[$i][1]])) {
                     $constant_name = $tokens[$i][1];
                     $ext = $this->constantsSet[$tokens[$i][1]];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
-                    fwrite(STDOUT, '['.$ext.'] Constant "'.$constant_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                    if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
+                        fwrite(STDOUT, '['.$ext.'] Constant "'.$constant_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
                 }
             }
         }
