@@ -31,10 +31,10 @@ return array(
 		'curl_unescape',
 		'curl_version'
 	),
-	'classes'	=> array(
+	'classes' => array(
 		'CURLFile'
 	),
-	'constants'	=> array(
+	'constants' => array(
 		'CURLOPT_AUTOREFERER',
 		'CURLOPT_COOKIESESSION',
 		'CURLOPT_DNS_USE_GLOBAL_CACHE',
@@ -302,5 +302,6 @@ return array(
 		'CURLPROXY_SOCKS4A',
 		'CURLPROXY_SOCKS5_HOSTNAME'
 	),
+	'description' => 'Client URL Library',
 	'php_version' => '4.0.2',
 );

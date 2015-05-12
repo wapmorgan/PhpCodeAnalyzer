@@ -6,7 +6,7 @@ return array(
 		'json_last_error_msg',
 		'json_last_error'
 	),
-	'constants'	=> array(
+	'constants' => array(
 		'JSON_ERROR_NONE',
 		'JSON_ERROR_DEPTH',
 		'JSON_ERROR_STATE_MISMATCH',
@@ -25,7 +25,8 @@ return array(
 		'JSON_BIGINT_AS_STRING',
 		'JSON_PRETTY_PRINT',
 		'JSON_UNESCAPED_SLASHES',
-		'JSON_UNESCAPED_UNICODE'	
+		'JSON_UNESCAPED_UNICODE'
 	),
+	'description' => 'JavaScript Object Notation',
 	'php_version' => '5.2.0',
 );
