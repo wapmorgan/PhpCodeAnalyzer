@@ -2,6 +2,11 @@
 PhpCodeAnalyzer finds usage of different non-built-in extensions in your php code.
 This tool helps you understand how transportable your code between php installations is.
 
+[![Latest Stable Version](https://poser.pugx.org/wapmorgan/php-code-analyzer/v/stable)](https://packagist.org/packages/wapmorgan/php-code-analyzer)
+[![Total Downloads](https://poser.pugx.org/wapmorgan/php-code-analyzer/downloads)](https://packagist.org/packages/wapmorgan/php-code-analyzer)
+[![License](https://poser.pugx.org/wapmorgan/php-code-analyzer/license)](https://packagist.org/packages/wapmorgan/php-code-analyzer)
+
+# TOC
 - [Example of usage](#example-of-usage)
 - [Help](#help)
 - [Installation](#installation)
