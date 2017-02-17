@@ -8,7 +8,7 @@ use wapmorgan\PhpCodeAnalyzer\PhpCodeAnalyzer;
 
 $doc = <<<DOC
 Usage:
-    phpca [-v] [--no-report] [--no-progress] [FILES ...]
+    phpca [-v] [--no-report] [--no-progress] [--since-version=<version>] [FILES ...]
     phpca [-v] --extension=<ext> [FILES ...]
     phpca -h
 
@@ -18,6 +18,7 @@ Options:
   --extension=<ext> Look for usage a specific extension
   --no-report       Turn off summary report
   --no-progress     Turn off progress
+  --since-version=<version> Only include extensions not included since version
 
 DOC;
 
@@ -39,7 +40,7 @@ if (isset($args['--extension']))
 else
     $analyzer->loadData();
 
-if (isset($args['--since-version']))
+if (isset($args['--since-version']) && $args['--since-version'])
     $analyzer->setSinceVersion($args['--since-version']);
 
 if (!empty($args['FILES'])) {
