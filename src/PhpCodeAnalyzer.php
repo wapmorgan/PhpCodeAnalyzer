@@ -267,6 +267,10 @@ class PhpCodeAnalyzer {
     }
 
     public function printUsedExtensions() {
+        if (empty($this->usedExtensions)) {
+            echo 'Your code has no usage of non-built-in extension.'.PHP_EOL;
+            return null;
+        }
         echo 'Used non-built-in extensions in your code:'.PHP_EOL;
         arsort($this->usedExtensions);
         foreach ($this->usedExtensions as $extension => $uses_number) {
