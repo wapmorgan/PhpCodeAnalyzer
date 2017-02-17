@@ -51,6 +51,11 @@ class PhpCodeAnalyzer {
     private $sinceVersion = null;
 
     public function setSinceVersion($version){
+        if (!preg_match('~^[[:digit:]]{1}\.[[:digit:]]{1}(\.[[:digit:]]{1})?$~', $version, $match))
+            return false;
+        // fix for short version like 5.2
+        if (empty($match[3]))
+            $version .= '.0';
         $this->sinceVersion = $version;
     }
 
@@ -58,6 +63,14 @@ class PhpCodeAnalyzer {
         foreach (glob(dirname(dirname(__FILE__)).'/data/*.php') as $extension_file) {
             $ext = basename($extension_file, '.php');
             $extension_data = include $extension_file;
+
+            // skip extensions bundled since lower version
+            if (!empty($this->sinceVersion) && isset($extension_data['php_version'])) {
+                if (version_compare($extension_data['php_version'], $this->sinceVersion, '<')){
+                    continue;
+                }
+            }
+
             if (isset($extension_data['functions'])) {
                 foreach ($extension_data['functions'] as $extension_function) {
                     $this->functionsSet[$extension_function] = $ext;
@@ -275,12 +288,6 @@ class PhpCodeAnalyzer {
         arsort($this->usedExtensions);
         foreach ($this->usedExtensions as $extension => $uses_number) {
             $extension_data = $this->extensions[$extension];
-
-            if (!is_null($this->sinceVersion) && isset($extension_data['php_version'])) {
-                if(version_compare($extension_data['php_version'], $this->sinceVersion, '<=')){
-                    continue;
-                }
-            }
 
             if (isset($extension_data['description']))
                 echo '- ['.$extension.'] '.$extension_data['description'].'.';

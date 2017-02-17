@@ -35,13 +35,15 @@ else
     $_ENV['--no-progress'] = false;
 
 $analyzer = new PhpCodeAnalyzer();
+
+if (isset($args['--since-version']) && $args['--since-version'])
+    $analyzer->setSinceVersion($args['--since-version']);
+
 if (isset($args['--extension']))
     $analyzer->loadOneExtensionData($args['--extension']);
 else
     $analyzer->loadData();
 
-if (isset($args['--since-version']) && $args['--since-version'])
-    $analyzer->setSinceVersion($args['--since-version']);
 
 if (!empty($args['FILES'])) {
     foreach ($args['FILES'] as $file) {
