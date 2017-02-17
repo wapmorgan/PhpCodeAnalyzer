@@ -48,6 +48,11 @@ class PhpCodeAnalyzer {
     private $constantsSet = array();
     private $extensions = array();
     private $usedExtensions = array();
+    private $sinceVersion = null;
+
+    public function setSinceVersion($version){
+        $this->sinceVersion = $version;
+    }
 
     public function loadData() {
         foreach (glob(dirname(dirname(__FILE__)).'/data/*.php') as $extension_file) {
@@ -266,6 +271,13 @@ class PhpCodeAnalyzer {
         arsort($this->usedExtensions);
         foreach ($this->usedExtensions as $extension => $uses_number) {
             $extension_data = $this->extensions[$extension];
+
+            if (!is_null($this->sinceVersion) && isset($extension_data['php_version'])) {
+                if(version_compare($extension_data['php_version'], $this->sinceVersion, '<=')){
+                    continue;
+                }
+            }
+
             if (isset($extension_data['description']))
                 echo '- ['.$extension.'] '.$extension_data['description'].'.';
             else

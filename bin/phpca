@@ -39,6 +39,9 @@ if (isset($args['--extension']))
 else
     $analyzer->loadData();
 
+if (isset($args['--since-version']))
+    $analyzer->setSinceVersion($args['--since-version']);
+
 if (!empty($args['FILES'])) {
     foreach ($args['FILES'] as $file) {
         if (is_dir($file)) {
