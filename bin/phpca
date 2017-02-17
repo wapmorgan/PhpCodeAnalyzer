@@ -8,16 +8,16 @@ use wapmorgan\PhpCodeAnalyzer\PhpCodeAnalyzer;
 
 $doc = <<<DOC
 Usage:
-    phpca [-v] [--no-report] [--no-progress] [--since-version=<version>] [FILES ...]
-    phpca [-v] --extension=<ext> [FILES ...]
+    phpca [-v] [--no-report] [--no-progress] [--since-version=<version>] FILES...
+    phpca [-v] --extension=<ext> FILES...
     phpca -h
 
 Options:
-  -h --help         Show this text
-  -v --verbose      Show more debug text
-  --extension=<ext> Look for usage a specific extension
-  --no-report       Turn off summary report
-  --no-progress     Turn off progress
+  -h --help                 Show this text
+  -v --verbose              Show more debug text
+  --extension=<ext>         Look for usage a specific extension
+  --no-report               Turn off summary report
+  --no-progress             Turn off progress
   --since-version=<version> Only include extensions not included since version
 
 DOC;
