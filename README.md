@@ -15,7 +15,7 @@ This tool helps you understand how transportable your code between php installat
 # Example of usage
 To scan your files or folder launch `phpca` and pass file or directory names.
 ``` sh
-> php bin\phpca ..\HttpServer
+> phpca ..\HttpServer
 Scanning ..\HttpServer ...
 [spl] Function "spl_autoload_register" used in file ..\HttpServer/vendor/composer/ClassLoader.php[258]
 [spl] Function "spl_autoload_unregister" used in file ..\HttpServer/vendor/composer/ClassLoader.php[266]
@@ -28,7 +28,7 @@ Used non-built-in extensions in your code:
 
 You can skip progress with `--no-progress` option:
 ``` sh
-> php bin\phpca --no-progress ..\yii-1.1.16.bca042\framework\caching
+> phpca --no-progress ..\yii-1.1.16.bca042\framework\caching
 Scanning ..\yii-1.1.16.bca042\framework\caching ...
 
 Used non-built-in extensions in your code:
@@ -39,7 +39,7 @@ Used non-built-in extensions in your code:
 
 Also, you can keep only progress with `--no-report` option:
 ``` sh
-> php bin\phpca --no-report ..\yii-1.1.16.bca042\framework\caching
+> phpca --no-report ..\yii-1.1.16.bca042\framework\caching
 Scanning ..\yii-1.1.16.bca042\framework\caching ...
 [apc] Function "apc_fetch" used in file ..\yii-1.1.16.bca042\framework\caching/CApcCache.php[46]
 [apc] Function "apc_fetch" used in file ..\yii-1.1.16.bca042\framework\caching/CApcCache.php[56]
@@ -58,7 +58,7 @@ Scanning ..\yii-1.1.16.bca042\framework\caching ...
 
 If you want to see only usage of one specific extension, use `--extension=` option:
 ``` sh
-> php bin\phpca --extension=apc ..\yii-1.1.16.bca042\framework\caching
+> phpca --extension=apc ..\yii-1.1.16.bca042\framework\caching
 Scanning ..\yii-1.1.16.bca042\framework\caching ...
 [apc] Function "apc_fetch" used in file ..\yii-1.1.16.bca042\framework\caching/CApcCache.php[46]
 [apc] Function "apc_fetch" used in file ..\yii-1.1.16.bca042\framework\caching/CApcCache.php[56]
@@ -73,7 +73,7 @@ Summary report in this case will not be added at the end.
 # Help
 Full list of available options:
 ``` sh
-> php bin\phpca -h
+> phpca -h
 Usage:
     phpca [-v] [--no-report] [--no-progress] [--since-version=<version>] FILES...
     phpca [-v] --extension=<ext> FILES...
@@ -89,8 +89,20 @@ Options:
 ```
 
 # Installation
+## Phar
+The recommended way to install phpcf is as phar-package.
+
+1. Just download a phar from [releases page](https://github.com/wapmorgan/PhpCodeAnalyzer/releases)
+2. Make it executable and put it in one of folders listed in your `$PATH`:
+    ```sh
+    chmod +x phpca.phar
+    sudo mv phpca.phar /usr/local/bin/phpca
+    ```
+    
+Further I will use commands for PhpCodeAnalyzer installed as phar, but if you've installed it with composer, just replace `phpca` command with `vendor/bin/phpca`.
+
 ## Composer
-The recommended way to install phpcf is via composer.
+Another way to install phpcf is via composer.
 
 1. If you do not have composer installed, download the [`composer.phar`](https://getcomposer.org/composer.phar) executable or use the installer.
   ``` sh
