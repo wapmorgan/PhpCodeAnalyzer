@@ -119,3 +119,12 @@ Another way to install _phpca_ is via composer.
   ```
 
 3. Run `php composer.phar update`
+
+### Global installation
+You can get more profit when _phpca_ installed globally.
+
+1. If you do not have composer installed, look previous section and install composer on your server.
+
+2. Run `php composer.phar global require wapmorgan/php-code-analyzer`
+
+If _phpca_ installed globally, you can use `phpca` command inside any directory.
