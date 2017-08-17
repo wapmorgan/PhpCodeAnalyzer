@@ -12,5 +12,21 @@
     "require": {
         "docopt/docopt": "~1.0"
     },
-    "bin": ["bin/phpca"]
+    "bin": ["bin/phpca"],
+    "extra": {
+        "phar-builder": {
+            "compression": "BZip2",
+            "name": "phpca.phar",
+            "output-dir": "./",
+            "entry-point": "bin/phpca",
+            "include": ["bin", "data"],
+            "events": {
+                "command.package.start" : "git describe --tags > bin/version.txt",
+                "command.package.end": "chmod +x phpca.phar"
+            }
+        }
+    },
+    "scripts": {
+        "build": "phar-builder package composer.json"
+    }
 }

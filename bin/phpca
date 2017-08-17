@@ -6,7 +6,9 @@ require $vendor_dir.'/autoload.php';
 
 use wapmorgan\PhpCodeAnalyzer\PhpCodeAnalyzer;
 
+$version = file_exists(__DIR__.'/version.txt') ? trim(file_get_contents(__DIR__.'/version.txt')) : null;
 $doc = <<<DOC
+PhpCodeAnalyzer $version
 Usage:
     phpca [-v] [--no-report] [--no-progress] [--since-version=<version>] FILES...
     phpca [-v] --extension=<ext> FILES...
