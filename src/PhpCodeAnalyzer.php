@@ -60,7 +60,8 @@ class PhpCodeAnalyzer {
     }
 
     public function loadData() {
-        foreach (glob(dirname(dirname(__FILE__)).'/data/*.php') as $extension_file) {
+        $extensions = $this->getExtensionFiles();
+        foreach ($extensions as $extension_file) {
             $ext = basename($extension_file, '.php');
             $extension_data = include $extension_file;
 
@@ -322,5 +323,21 @@ class PhpCodeAnalyzer {
 
             echo PHP_EOL;
         }
+    }
+
+    protected function getExtensionFiles()
+    {
+        $files = [];
+        $dir = dirname(dirname(__FILE__)).'/data/';
+        $resource = opendir($dir);
+
+        if ($resource === null)
+            return [];
+
+        while (($file = readdir($resource)) !== false) {
+            if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) == 'php')
+                $files[] = $dir.'/'.$file;
+        }
+        return $files;
     }
 }
