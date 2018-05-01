@@ -72,16 +72,19 @@ Summary report in this case will not be added at the end.
 
 # Help
 Full list of available options:
-``` sh
+```sh
 > phpca -h
+PhpCodeAnalyzer
 Usage:
-    phpca [-v] [--no-report] [--no-progress] [--since-version=<version>] FILES...
-    phpca [-v] --extension=<ext> FILES...
+    phpca [-v] [-q] [--output=<path>] [--no-report] [--no-progress] [--since-version=<version>] FILES...
+    phpca [-v] [-q] [--output=<path>] --extension=<ext> FILES...
     phpca -h
 
 Options:
   -h --help                 Show this text
   -v --verbose              Show more debug text
+  -q --quiet                Don't print any messages
+  --output=<path>           Path where to generate XML report
   --extension=<ext>         Look for usage a specific extension
   --no-report               Turn off summary report
   --no-progress             Turn off progress
@@ -98,7 +101,7 @@ The recommended way to install _phpca_ is as phar-package.
     chmod +x phpca.phar
     sudo mv phpca.phar /usr/local/bin/phpca
     ```
-    
+
 Further I will use commands for PhpCodeAnalyzer installed as phar or globally with composer, but if you've installed it locally with composer, just replace `phpca` command with `vendor/bin/phpca`.
 
 ## Composer

@@ -50,6 +50,10 @@ class PhpCodeAnalyzer {
     private $usedExtensions = array();
     private $sinceVersion = null;
 
+    const XML_ENTRY_TEMPLATE = '<file path="%s" extension="%s" line="%d" type="%s">%s</file>';
+    const XML_BEGINNING_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?><php-code-analyzer version="%s"><files>';
+    const XML_ENDING = '</files></php-code-analyzer>';
+
     public function setSinceVersion($version){
         if (!preg_match('~^[[:digit:]]{1}\.[[:digit:]]{1}(\.[[:digit:]]{1})?$~', $version, $match))
             return false;
@@ -286,13 +290,15 @@ class PhpCodeAnalyzer {
     }
 
     public function printUsedExtensions() {
-        $this->println('');
+        $this->println();
         if (empty($this->usedExtensions)) {
             $this->printMsg('Your code has no usage of non-built-in extension.');
             return null;
         }
+
         $this->println('Used non-built-in extensions in your code:');
         arsort($this->usedExtensions);
+
         foreach ($this->usedExtensions as $extension => $uses_number) {
             $extension_data = $this->extensions[$extension];
 
@@ -327,7 +333,7 @@ class PhpCodeAnalyzer {
                 $this->printMsg(' Only windows is supported by this extension.');
             }
 
-            $this->println('');
+            $this->println();
         }
     }
 
@@ -347,7 +353,7 @@ class PhpCodeAnalyzer {
         return $files;
     }
 
-    private function println($message, $verbose = false)
+    private function println($message = null, $verbose = false)
     {
         $this->printMsg($message.PHP_EOL, $verbose);
     }
@@ -355,7 +361,7 @@ class PhpCodeAnalyzer {
     private function printMsg($message, $verbose = false)
     {
         if ($_ENV['quiet']) {
-            return '';
+            return null;
         }
         if ($_ENV['verbose'] || !$verbose) {
             fwrite(STDOUT, $message);
@@ -367,8 +373,7 @@ class PhpCodeAnalyzer {
         if ($_ENV['output'] === null) {
             return;
         }
-        $pattern = '<file path="%s" extension="%s" line="%d" type="%s">%s</file>';
-        file_put_contents($_ENV['output'], sprintf($pattern, $file, $extension, $line, $type, $name), FILE_APPEND);
+        file_put_contents($_ENV['output'], sprintf(self::XML_ENTRY_TEMPLATE, $file, $extension, $line, $type, $name), FILE_APPEND);
     }
 
     public function printXmlStart()
@@ -377,8 +382,7 @@ class PhpCodeAnalyzer {
             return;
         }
         $version = file_exists(__DIR__.'/../bin/version.txt') ? trim(file_get_contents(__DIR__.'/../bin/version.txt')) : null;
-        $pattern = '<?xml version="1.0" encoding="UTF-8"?><php-code-analyzer version="%s"><files>';
-        file_put_contents($_ENV['output'], sprintf($pattern, $version));
+        file_put_contents($_ENV['output'], sprintf(self::XML_BEGINNING_TEMPLATE, $version));
     }
 
     public function printXmlEnd()
@@ -386,6 +390,6 @@ class PhpCodeAnalyzer {
         if ($_ENV['output'] === null) {
             return;
         }
-        file_put_contents($_ENV['output'], '</files></php-code-analyzer>', FILE_APPEND);
+        file_put_contents($_ENV['output'], self::XML_ENDING, FILE_APPEND);
     }
 }
