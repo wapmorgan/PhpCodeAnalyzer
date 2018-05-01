@@ -127,7 +127,7 @@ class PhpCodeAnalyzer {
     }
 
     public function analyzeDir($dir) {
-        echo 'Scanning '.$dir.' ...'.PHP_EOL;
+        $this->println('Scanning '.$dir.' ...');
         $this->analyzeDirInternal($dir);
     }
 
@@ -142,8 +142,7 @@ class PhpCodeAnalyzer {
     }
 
     public function analyzeFile($file) {
-        if (isset($_ENV['verbose']) && $_ENV['verbose'])
-            echo 'Analyzing file '.$file.PHP_EOL;
+        $this->println('Analyzing file '.$file, true);
         $source = file_get_contents($file);
         $tokens = token_get_all($source);
 
@@ -169,8 +168,10 @@ class PhpCodeAnalyzer {
                     $ext = $this->classesSet[$class_name];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
-                    if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
-                        fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                    $this->printXmlFileData($file, $tokens[$i][2], $ext, 'class', $class_name);
+                    if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress']) {
+                        $this->println('[' . $ext . '] Class "' . $class_name . '" used in file ' . $file . '[' . $tokens[$i][2] . ']');
+                    }
                 }
             }
             // new statement
@@ -185,8 +186,9 @@ class PhpCodeAnalyzer {
                     $ext = $this->classesSet[$class_name];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
+                    $this->printXmlFileData($file, $tokens[$i][2], $ext, 'class', $class_name);
                     if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
-                        fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                        $this->println('['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']');
                 }
             }
             // extends statement
@@ -201,8 +203,9 @@ class PhpCodeAnalyzer {
                     $ext = $this->classesSet[$class_name];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
+                    $this->printXmlFileData($file, $tokens[$i][2], $ext, 'class', $class_name);
                     if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
-                        fwrite(STDOUT, '['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                        $this->println('['.$ext.'] Class "'.$class_name.'" used in file '.$file.'['.$tokens[$i][2].']');
                 }
             }
             // find other usages
@@ -212,15 +215,17 @@ class PhpCodeAnalyzer {
                     $ext = $this->functionsSet[$tokens[$i][1]];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
+                    $this->printXmlFileData($file, $tokens[$i][2], $ext, 'function', $function_name);
                     if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
-                        fwrite(STDOUT, '['.$ext.'] Function "'.$function_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                        $this->println('['.$ext.'] Function "'.$function_name.'" used in file '.$file.'['.$tokens[$i][2].']');
                 } else if (isset($this->constantsSet[$tokens[$i][1]])) {
                     $constant_name = $tokens[$i][1];
                     $ext = $this->constantsSet[$tokens[$i][1]];
                     if (isset($this->usedExtensions[$ext])) $this->usedExtensions[$ext]++;
                     else $this->usedExtensions[$ext] = 1;
+                    $this->printXmlFileData($file, $tokens[$i][2], $ext, 'constant', $constant_name);
                     if (count($this->extensions) == 1 || !isset($_ENV['--no-progress']) || !$_ENV['--no-progress'])
-                        fwrite(STDOUT, '['.$ext.'] Constant "'.$constant_name.'" used in file '.$file.'['.$tokens[$i][2].']'.PHP_EOL);
+                        $this->println('['.$ext.'] Constant "'.$constant_name.'" used in file '.$file.'['.$tokens[$i][2].']');
                 }
             }
         }
@@ -281,47 +286,48 @@ class PhpCodeAnalyzer {
     }
 
     public function printUsedExtensions() {
+        $this->println('');
         if (empty($this->usedExtensions)) {
-            echo 'Your code has no usage of non-built-in extension.'.PHP_EOL;
+            $this->printMsg('Your code has no usage of non-built-in extension.');
             return null;
         }
-        echo 'Used non-built-in extensions in your code:'.PHP_EOL;
+        $this->println('Used non-built-in extensions in your code:');
         arsort($this->usedExtensions);
         foreach ($this->usedExtensions as $extension => $uses_number) {
             $extension_data = $this->extensions[$extension];
 
             if (isset($extension_data['description']))
-                echo '- ['.$extension.'] '.$extension_data['description'].'.';
+                $this->printMsg('- ['.$extension.'] '.$extension_data['description'].'.');
             else
-                echo '- '.$extension.'.';
+                $this->printMsg('- '.$extension.'.');
 
             if (isset($extension_data['php_version'])) {
-                echo ' This extension is bundled with php since PHP '.$extension_data['php_version'].'.';
+                $this->printMsg(' This extension is bundled with php since PHP '.$extension_data['php_version'].'.');
             } else if (isset($extension_data['before_php_version'])) {
-                echo ' This extension has been bundled with php prior PHP '.$extension_data['php_version'].'.';
+                $this->printMsg(' This extension has been bundled with php prior PHP '.$extension_data['php_version'].'.');
             } else if (isset($extension_data['no_php_version'])) {
-                echo ' This extension has not been bundled with php in PHP '.$extension_data['no_php_version'][0].' - '.$extension_data['no_php_version'][1].'.';
+                $this->printMsg(' This extension has not been bundled with php in PHP '.$extension_data['no_php_version'][0].' - '.$extension_data['no_php_version'][1].'.');
             }
 
             if (isset($extension_data['dead'])) {
-                echo ' This extension is seen to be dead now.';
+                $this->printMsg(' This extension is seen to be dead now.');
             }
 
             if (isset($extension_data['pecl_name'])) {
-                echo ' Extension is available in pecl: '.$extension_data['pecl_name'].'.';
+                $this->printMsg(' Extension is available in pecl: '.$extension_data['pecl_name'].'.');
             } else if (!isset($extension_data['pecl']) || $extension_data['pecl']) {
-                echo ' Extension is available in pecl: '.$extension.'.';
+                $this->printMsg(' Extension is available in pecl: '.$extension.'.');
             } else if (isset($extension_data['download_link'])) {
-                echo ' Extension can be downloaded from external site: '.$extension_data['download_link'].'.';
+                $this->printMsg(' Extension can be downloaded from external site: '.$extension_data['download_link'].'.');
             }
 
             if (isset($extension_data['windows']) && !$extension_data['windows']) {
-                echo ' Windows is not supported by this extension.';
+                $this->printMsg(' Windows is not supported by this extension.');
             } else if (isset($extension_data['windows_only']) && $extension_data['windows_only']) {
-                echo ' Only windows is supported by this extension.';
+                $this->printMsg(' Only windows is supported by this extension.');
             }
 
-            echo PHP_EOL;
+            $this->println('');
         }
     }
 
@@ -339,5 +345,47 @@ class PhpCodeAnalyzer {
                 $files[] = $dir.'/'.$file;
         }
         return $files;
+    }
+
+    private function println($message, $verbose = false)
+    {
+        $this->printMsg($message.PHP_EOL, $verbose);
+    }
+
+    private function printMsg($message, $verbose = false)
+    {
+        if ($_ENV['quiet']) {
+            return '';
+        }
+        if ($_ENV['verbose'] || !$verbose) {
+            fwrite(STDOUT, $message);
+        }
+    }
+
+    private function printXmlFileData($file, $line, $extension, $type, $name)
+    {
+        if ($_ENV['output'] === null) {
+            return;
+        }
+        $pattern = '<file path="%s" extension="%s" line="%d" type="%s">%s</file>';
+        file_put_contents($_ENV['output'], sprintf($pattern, $file, $extension, $line, $type, $name), FILE_APPEND);
+    }
+
+    public function printXmlStart()
+    {
+        if ($_ENV['output'] === null) {
+            return;
+        }
+        $version = file_exists(__DIR__.'/../bin/version.txt') ? trim(file_get_contents(__DIR__.'/../bin/version.txt')) : null;
+        $pattern = '<?xml version="1.0" encoding="UTF-8"?><php-code-analyzer version="%s"><files>';
+        file_put_contents($_ENV['output'], sprintf($pattern, $version));
+    }
+
+    public function printXmlEnd()
+    {
+        if ($_ENV['output'] === null) {
+            return;
+        }
+        file_put_contents($_ENV['output'], '</files></php-code-analyzer>', FILE_APPEND);
     }
 }

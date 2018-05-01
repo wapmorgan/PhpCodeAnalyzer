@@ -10,13 +10,15 @@ $version = file_exists(__DIR__.'/version.txt') ? trim(file_get_contents(__DIR__.
 $doc = <<<DOC
 PhpCodeAnalyzer $version
 Usage:
-    phpca [-v] [--no-report] [--no-progress] [--since-version=<version>] FILES...
-    phpca [-v] --extension=<ext> FILES...
+    phpca [-v] [-q] [--output=<path>] [--no-report] [--no-progress] [--since-version=<version>] FILES...
+    phpca [-v] [-q] [--output=<path>] --extension=<ext> FILES...
     phpca -h
 
 Options:
   -h --help                 Show this text
   -v --verbose              Show more debug text
+  -q --quiet                Don't print any messages
+  --output=<path>           Path where to generate XML report
   --extension=<ext>         Look for usage a specific extension
   --no-report               Turn off summary report
   --no-progress             Turn off progress
@@ -36,6 +38,13 @@ if (isset($args['--no-progress']) && $args['--no-progress'])
 else
     $_ENV['--no-progress'] = false;
 
+$_ENV['quiet'] = (isset($args['--quiet']) && $args['--quiet']);
+
+if (isset($args['--output']))
+    $_ENV['output'] = $args['--output'];
+else
+    $_ENV['output'] = null;
+
 $analyzer = new PhpCodeAnalyzer();
 
 if (isset($args['--since-version']) && $args['--since-version'])
@@ -48,6 +57,7 @@ else
 
 
 if (!empty($args['FILES'])) {
+    $analyzer->printXmlStart();
     foreach ($args['FILES'] as $file) {
         if (is_dir($file)) {
             $analyzer->analyzeDir($file);
@@ -56,7 +66,7 @@ if (!empty($args['FILES'])) {
         }
     }
     if ((!isset($args['--no-report']) || !$args['--no-report']) && !isset($args['--extension'])) {
-        echo PHP_EOL;
         $analyzer->printUsedExtensions();
     }
+    $analyzer->printXmlEnd();
 }
