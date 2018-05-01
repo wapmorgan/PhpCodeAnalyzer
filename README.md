@@ -93,41 +93,38 @@ Options:
 
 # Installation
 ## Phar
-The recommended way to install _phpca_ is as phar-package.
 
-1. Just download a phar from [releases page](https://github.com/wapmorgan/PhpCodeAnalyzer/releases)
-2. Make it executable and put it in one of folders listed in your `$PATH`:
+1. Just download a phar from [releases page](https://github.com/wapmorgan/PhpCodeAnalyzer/releases) and make executable
+  ```sh
+  chmod +x phpca.phar
+  ```
+  
+2. a. **Local installation**: use it from current folder:
+    ```php
+    ./phpca.phar -h
+    ```
+    
+    b. **Global installation**: move it in to one of folders listed in your `$PATH` and run from any folder:
     ```sh
-    chmod +x phpca.phar
     sudo mv phpca.phar /usr/local/bin/phpca
+    phpca -h
     ```
 
-Further I will use commands for PhpCodeAnalyzer installed as phar or globally with composer, but if you've installed it locally with composer, just replace `phpca` command with `vendor/bin/phpca`.
-
 ## Composer
-Another way to install _phpca_ is via composer.
+Another way to install **phpca** is via composer.
 
-1. If you do not have composer installed, download the [`composer.phar`](https://getcomposer.org/composer.phar) executable or use the installer.
-  ``` sh
+1. Install composer:
+  ```sh
   $ curl -sS https://getcomposer.org/installer | php
   ```
 
-2. Run `php composer.phar require wapmorgan/php-code-analyzer *` or add requirement in composer.json.
-  ``` json
-  {
-    "require": {
-      "wapmorgan/php-code-analyzer": "*"
-    }
-  }
+2. Install phpcf in global composer dir:
+  ```sh
+  ./composer.phar global require wapmorgan/php-code-analyzer dev-master
+  ```
+  
+3. Run from any folder:
+  ```sh
+  phpca -h
   ```
 
-3. Run `php composer.phar update`
-
-### Global installation
-You can get more profit when _phpca_ installed globally.
-
-1. If you do not have composer installed, look previous section and install composer on your server.
-
-2. Run `php composer.phar global require wapmorgan/php-code-analyzer`
-
-If _phpca_ installed globally, you can use `phpca` command inside any directory.
