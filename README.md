@@ -115,7 +115,7 @@ Another way to install **phpca** is via composer.
 
 1. Install composer:
   ```sh
-  $ curl -sS https://getcomposer.org/installer | php
+  curl -sS https://getcomposer.org/installer | php
   ```
 
 2. Install phpcf in global composer dir:
