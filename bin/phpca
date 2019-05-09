@@ -6,17 +6,19 @@ require $vendor_dir.'/autoload.php';
 
 use wapmorgan\PhpCodeAnalyzer\PhpCodeAnalyzer;
 
-$version = file_exists(__DIR__.'/version.txt') ? trim(file_get_contents(__DIR__.'/version.txt')) : null;
+$version = file_exists(__DIR__.'/version.txt') ? trim(file_get_contents(__DIR__.'/version.txt')) : PhpCodeAnalyzer::VERSION;
 $doc = <<<DOC
 PhpCodeAnalyzer $version
 Usage:
     phpca [-v] [-q] [--output=<path>] [--no-report] [--no-progress] [--since-version=<version>] FILES...
     phpca [-v] [-q] [--output=<path>] --extension=<ext> FILES...
     phpca -h
+    phpca --version
 
 Options:
   -h --help                 Show this text
   -v --verbose              Show more debug text
+     --version              Show version.
   -q --quiet                Don't print any messages
   --output=<path>           Path where to generate XML report
   --extension=<ext>         Look for usage a specific extension
@@ -26,7 +28,7 @@ Options:
 
 DOC;
 
-$args = Docopt::handle($doc);
+$args = Docopt::handle($doc, ['version' => $version]);
 
 if (isset($args['--verbose']) && $args['--verbose'])
     $_ENV['verbose'] = true;

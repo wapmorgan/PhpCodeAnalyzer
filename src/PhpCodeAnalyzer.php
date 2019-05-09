@@ -43,6 +43,8 @@ function array_filter_by_column($source, $needle, $column) {
 }
 
 class PhpCodeAnalyzer {
+    const VERSION = '1.0.6';
+
     private $functionsSet = array();
     private $classesSet = array();
     private $constantsSet = array();
